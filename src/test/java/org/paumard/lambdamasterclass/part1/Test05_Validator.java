@@ -9,7 +9,6 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public class Test05_Validator {
 
-    /*
     @Test
     public void validator_1() {
 
@@ -34,7 +33,7 @@ public class Test05_Validator {
         assertThatExceptionOfType(Validator.ValidationException.class)
                 .isThrownBy(() -> validator.validate(person).get());
 
-         validator.validate(person).get();
+        // validator.validate(person).get();
     }
 
     @Test
@@ -49,7 +48,7 @@ public class Test05_Validator {
         assertThatExceptionOfType(Validator.ValidationException.class)
                 .isThrownBy(() -> validator.validate(person).get());
 
-         validator.validate(person).get();
+        // validator.validate(person).get();
     }
 
     @Test
@@ -64,7 +63,7 @@ public class Test05_Validator {
         assertThatExceptionOfType(Validator.ValidationException.class)
                 .isThrownBy(() -> validator.validate(person).get());
 
-         validator.validate(person).get();
+        // validator.validate(person).get();
     }
-    */
+
 }

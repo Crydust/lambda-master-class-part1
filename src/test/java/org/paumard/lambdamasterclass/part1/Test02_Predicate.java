@@ -17,7 +17,7 @@ public class Test02_Predicate {
     public void predicate_1() {
         Predicate<String> p1 = s -> s.isEmpty();
 
-        Predicate<String> notPredicate = null; // TODO
+        Predicate<String> notPredicate = p1.negate();
 
         assertThat(notPredicate.test("")).isFalse();
         assertThat(notPredicate.test("Not empty!")).isTrue();
@@ -34,7 +34,10 @@ public class Test02_Predicate {
         Predicate<String> p1 = s -> s != null;
         Predicate<String> p2 = s -> s.isEmpty();
 
-        Predicate<String> p3 = null; // TODO
+//        Predicate<String> p3 = (s) -> s != null && !s.isEmpty();
+//        Predicate<String> p3 = (s) -> p1.test(s) && !p2.test(s);
+        Predicate<String> p3 = p1.and(p2.negate());
+//        Predicate<String> p3 = p1.and(not(p2)); // since 11
 
         assertThat(p3.test("")).isFalse();
         assertThat(p3.test(null)).isFalse();
@@ -52,7 +55,7 @@ public class Test02_Predicate {
         Predicate<String> p1 = s -> s.length() == 4;
         Predicate<String> p2 = s -> s.startsWith("J");
 
-        Predicate<String> p3 = null; // TODO
+        Predicate<String> p3 = (s) -> p1.test(s) ^ p2.test(s);
 
         assertThat(p3.test("True")).isTrue();
         assertThat(p3.test("Julia")).isTrue();

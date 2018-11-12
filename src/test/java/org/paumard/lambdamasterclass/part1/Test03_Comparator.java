@@ -27,7 +27,10 @@ public class Test03_Comparator {
      */
     @Test
     public void comparator_1() {
-        Comparator<Person> cmp = null; // TODO
+        Comparator<Person> cmp = Comparator.nullsLast(
+                Comparator.comparing(Person::getLastName)
+                        .thenComparing(Person::getFirstName)
+                        .thenComparing(Person::getAge));
 
         assertThat(cmp.compare(michael, rod)).isLessThan(0);
         assertThat(cmp.compare(paul, paul)).isEqualTo(0);

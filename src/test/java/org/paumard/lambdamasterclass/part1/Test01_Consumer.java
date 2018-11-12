@@ -17,7 +17,8 @@ public class Test01_Consumer {
     @Test
     public void consumer_1() {
 
-        Consumer<List<String>> consumer = null; // TODO
+//        Consumer<List<String>> consumer = (it) -> it.clear();
+        Consumer<List<String>> consumer = List::clear;
 
         List<String> list =
                 new ArrayList<>(Arrays.asList("a", "b", "c"));
@@ -37,7 +38,11 @@ public class Test01_Consumer {
         Consumer<List<String>> c1 = list -> list.add("first");
         Consumer<List<String>> c2 = list -> list.add("second");
 
-        Consumer<List<String>> consumer = null; // TODO
+//        Consumer<List<String>> consumer = (it) -> {
+//            c1.accept(it);
+//            c2.accept(it);
+//        };
+        Consumer<List<String>> consumer =  c1.andThen(c2);
 
         List<String> list =
                 new ArrayList<>(Arrays.asList("a", "b", "c"));
