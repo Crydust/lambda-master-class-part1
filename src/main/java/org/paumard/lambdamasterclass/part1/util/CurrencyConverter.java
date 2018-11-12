@@ -5,8 +5,12 @@ import java.util.Map;
 
 public interface CurrencyConverter {
 
-    static WithDate of(LocalDate date) {
-        return new WithDate(CONVERTERS, date);
+    static IWithDate of(LocalDate date) {
+        return from -> {
+            return to -> {
+                return CONVERTERS.get(date).get(from).get(to);
+            };
+        };
     }
 
     double convert(double amount);
@@ -20,28 +24,14 @@ public interface CurrencyConverter {
             )
     );
 
-    final class WithDate {
-        private final Map<String, Map<String, CurrencyConverter>> map;
-
-        WithDate(Map<LocalDate, Map<String, Map<String, CurrencyConverter>>> map, LocalDate date) {
-            this.map = map.get(date);
-        }
-
-        public WithDateAndFrom from(String from) {
-            return new WithDateAndFrom(map, from);
-        }
+    @FunctionalInterface
+    interface IWithDate {
+        IWithDateAndFrom from(String from);
     }
 
-    final class WithDateAndFrom {
-        private final Map<String, CurrencyConverter> map;
-
-        WithDateAndFrom(Map<String, Map<String, CurrencyConverter>> map, String from) {
-            this.map = map.get(from);
-        }
-
-        public CurrencyConverter to(String to) {
-            return map.get(to);
-        }
+    @FunctionalInterface
+    interface IWithDateAndFrom {
+        CurrencyConverter to(String to);
     }
 
 }
