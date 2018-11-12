@@ -2,66 +2,45 @@ package org.paumard.lambdamasterclass.part1.util;
 
 import java.time.LocalDate;
 import java.util.Map;
-import java.util.Objects;
 
 public interface CurrencyConverter {
 
-    static CurrencyConverterFinder of(LocalDate date) {
-        return new CurrencyConverterFinder(date);
+    static WithDate of(LocalDate date) {
+        return new WithDate(CONVERTERS, date);
     }
 
     double convert(double amount);
 
-
-    Map<Id, CurrencyConverter> converters = Map.of(
-            new Id("EUR", "GBP"), (it) -> it * 0.87749d,
-            new Id("NOK", "EUR"), (it) -> it * 0.10507d,
-            new Id("CHF", "CAD"), (it) -> it * 1.30665d
+    Map<LocalDate, Map<String, Map<String, CurrencyConverter>>> CONVERTERS = Map.of(
+            LocalDate.of(2018, 11, 5),
+            Map.of(
+                    "EUR", Map.of("GBP", (it) -> it * 0.87749d),
+                    "NOK", Map.of("EUR", (it) -> it * 0.10507d),
+                    "CHF", Map.of("CAD", (it) -> it * 1.30665d)
+            )
     );
 
-    final class CurrencyConverterFinder {
+    final class WithDate {
+        private final Map<String, Map<String, CurrencyConverter>> map;
 
-        private final LocalDate date;
-        private String from;
-        private String to;
-
-        CurrencyConverterFinder(LocalDate date) {
-            this.date = date;
+        WithDate(Map<LocalDate, Map<String, Map<String, CurrencyConverter>>> map, LocalDate date) {
+            this.map = map.get(date);
         }
 
-        public CurrencyConverterFinder from(String from) {
-            this.from = from;
-            return this;
-        }
-
-        public CurrencyConverter to(String to) {
-            this.to = to;
-            return converters.get(new Id(from, to));
+        public WithDateAndFrom from(String from) {
+            return new WithDateAndFrom(map, from);
         }
     }
 
-    final class Id {
+    final class WithDateAndFrom {
+        private final Map<String, CurrencyConverter> map;
 
-        private final String from;
-        private final String to;
-
-        Id(String from, String to) {
-            this.from = from;
-            this.to = to;
+        WithDateAndFrom(Map<String, Map<String, CurrencyConverter>> map, String from) {
+            this.map = map.get(from);
         }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Id that = (Id) o;
-            return Objects.equals(from, that.from) &&
-                    Objects.equals(to, that.to);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(from, to);
+        public CurrencyConverter to(String to) {
+            return map.get(to);
         }
     }
 
